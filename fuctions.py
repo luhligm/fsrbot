@@ -13,6 +13,15 @@ def rolecheck(user, roletocheck):
     else:
         return False
 
+    roles = ['winf', 'wipäd', 'wing']
+
+    if roletocheck == 'Anmeldung':
+        print("hey")
+        if role in roles:
+            return True
+        else:
+            return False
+
 
 # Test ob Nachricht in hinterlegtem Channel gesendet wurde
 
