@@ -33,8 +33,10 @@ async def welcomemsg(ctx):
     embed2.add_field(name="Wirtschaftswissenschaften", value="!wiwi", inline=True)
     embed2.set_footer(
         text="Sollte dir keine Rolle zugewiesen werden oder ein anderer Fehler auftreten, benutze !hilfe . Der Bot befinden sich noch in der Entwicklung, für Bugs möchten wir uns entschuldigen.")
-    await ctx.author.send(embed=embed2)
+    await ctx.channel.send(embed=embed2)
 
 
 async def confirmmsg(ctx, var):
-    await  ctx.author.send("Du hast dich erfolgreich für {} registriert! Wenn du sonstige Hilfe benötigst, wende dich bitte an einen Moderator.".format(var))
+    await ctx.channel.send(
+        "Du hast dich erfolgreich für {} registriert! Wenn du sonstige Hilfe benötigst, wende dich bitte an einen Moderator.".format(
+            var))
