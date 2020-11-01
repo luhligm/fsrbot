@@ -22,7 +22,7 @@ async def welcomemsg(ctx):
     embed.add_field(name="5.",
                     value="Bitte verhalte dich respektvoll gegenüber anderen. Wir behalten uns vor, Leute zu entfernen, falls uns negatives berichtet wird.",
                     inline=False)
-    await ctx.author.send(embed=embed)
+    await ctx.channel.send(embed=embed)
 
     embed2 = discord.Embed(
         title="Du musst dich nun noch mit deinem Studiengang registrieren, schreibe dafür den jeweiligen Befehl in den Anmeldungs-Textchannel:",
@@ -37,6 +37,6 @@ async def welcomemsg(ctx):
 
 
 async def confirmmsg(ctx, var):
-    await ctx.channel.send(
+    await ctx.author.send(
         "Du hast dich erfolgreich für {} registriert! Wenn du sonstige Hilfe benötigst, wende dich bitte an einen Moderator.".format(
             var))

@@ -15,15 +15,6 @@ async def on_ready():
     print('geladen')
 
 
-@client.event
-async def on_member_join(member):
-    await welcomemsg(member)
-    print(f"{member.author.name} ist beigetreten")
-    user = member.message.author
-    role = 'Anmeldung'
-    await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-
-
 @client.command()
 async def ping(ctx):
     await ctx.send(f'Pong --> {round(client.latency * 1000)} ms')
@@ -77,5 +68,9 @@ async def wiwi(ctx):
         await user.remove_roles(discord.utils.get(user.guild.roles, name='Anmeldung'))
         await confirmmsg(ctx, 'WWissenschaften')
 
+
+@client.command()
+async def wctext(ctx):
+    await welcomemsg(ctx)
 
 client.run(pw.TOKEN)
