@@ -28,7 +28,7 @@ async def welcomemsg(ctx):
     await ctx.channel.send(embed=embed)
 
     embed2 = discord.Embed(
-        title="Du musst dich nun noch mit deinem Studiengang registrieren, schreibe dafür den jeweiligen Befehl in den Anmeldungs-Textchannel:",
+        title="Um deinen Zugang freizuschalten, musst du dich registrieren. Schreibe dafür einfach den jeweiligen Befehl in diesen Channel hier: ",
         description="------", color=0x82fe06)
     embed2.add_field(name="Wirtschaftingeneurwesen", value="!wing", inline=False)
     embed2.add_field(name="Wirtschaftinformatik", value="!winf", inline=False)

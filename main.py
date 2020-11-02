@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord import member
 from discord.ext import commands
@@ -31,7 +33,7 @@ async def login(ctx):  # on_member_join(member)
 @client.command()
 async def wipad(ctx):
     role = 'wipäd'
-    if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
+    if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
         await confirmmsg(ctx, 'WPädagogik')
@@ -40,7 +42,7 @@ async def wipad(ctx):
 @client.command()
 async def winf(ctx):
     role = 'winf'
-    if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
+    if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
         await confirmmsg(ctx, 'WInformatik')
@@ -49,7 +51,7 @@ async def winf(ctx):
 @client.command()
 async def wing(ctx):
     role = 'wing'
-    if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
+    if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
         await confirmmsg(ctx, 'WIngeneurswesen')
@@ -58,15 +60,17 @@ async def wing(ctx):
 @client.command()
 async def wiwi(ctx):
     role = 'wiwi'
-    if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
+    if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
         await confirmmsg(ctx, 'WWissenschaften')
 
 
-@client.command()
-async def wctext(ctx):
-    await welcomemsg(ctx)
+@client.listen('on_message')
+async def autodelete(message):
+    if isRegisterChannel(message):
+        await asyncio.sleep(1)
+        await message.delete()
 
 
 client.run(pw.TOKEN)
