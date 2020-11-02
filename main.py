@@ -21,13 +21,11 @@ async def ping(ctx):
     await ctx.send(ctx.channel.id)
 
 
-@client.command()   # durch @client.event ersetzen
-async def login(ctx):   # on_member_join(member)
-    await welcomemsg(ctx)
+@client.command()  # durch @client.event ersetzen
+async def login(ctx):  # on_member_join(member)
     print(f"{ctx.author.name} ist beigetreten")
     user = ctx.message.author
     role = 'Anmeldung'
-    await user.add_roles(discord.utils.get(user.guild.roles, name=role))
 
 
 @client.command()
@@ -36,8 +34,8 @@ async def wipad(ctx):
     if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await user.remove_roles(discord.utils.get(user.guild.roles, name='Anmeldung'))
         await confirmmsg(ctx, 'WPädagogik')
+
 
 @client.command()
 async def winf(ctx):
@@ -45,7 +43,6 @@ async def winf(ctx):
     if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await user.remove_roles(discord.utils.get(user.guild.roles, name='Anmeldung'))
         await confirmmsg(ctx, 'WInformatik')
 
 
@@ -55,7 +52,6 @@ async def wing(ctx):
     if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await user.remove_roles(discord.utils.get(user.guild.roles, name='Anmeldung'))
         await confirmmsg(ctx, 'WIngeneurswesen')
 
 
@@ -65,12 +61,12 @@ async def wiwi(ctx):
     if rolecheck(ctx.author, 'Anmeldung') and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await user.remove_roles(discord.utils.get(user.guild.roles, name='Anmeldung'))
         await confirmmsg(ctx, 'WWissenschaften')
 
 
 @client.command()
 async def wctext(ctx):
     await welcomemsg(ctx)
+
 
 client.run(pw.TOKEN)
