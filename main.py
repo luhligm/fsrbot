@@ -23,16 +23,9 @@ async def ping(ctx):
     await ctx.send(ctx.channel.id)
 
 
-@client.command()  # durch @client.event ersetzen
-async def login(ctx):  # on_member_join(member)
-    print(f"{ctx.author.name} ist beigetreten")
-    user = ctx.message.author
-    role = 'Anmeldung'
-
-
 @client.command()
 async def wipad(ctx):
-    role = 'wipäd'
+    role = 'WPädagoge'
     if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
@@ -41,7 +34,7 @@ async def wipad(ctx):
 
 @client.command()
 async def winf(ctx):
-    role = 'winf'
+    role = 'WInformatiker'
     if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
@@ -50,7 +43,7 @@ async def winf(ctx):
 
 @client.command()
 async def wing(ctx):
-    role = 'wing'
+    role = 'WIngeneur'
     if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
@@ -59,7 +52,7 @@ async def wing(ctx):
 
 @client.command()
 async def wiwi(ctx):
-    role = 'wiwi'
+    role = 'WWissenschaftler'
     if rolecheck(ctx.author) and isRegisterChannel(ctx):
         user = ctx.message.author
         await user.add_roles(discord.utils.get(user.guild.roles, name=role))
