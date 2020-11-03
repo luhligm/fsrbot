@@ -1,12 +1,14 @@
 import discord
 
 
-async def welcomemsg(ctx):
+async def welcomemsg(ctx, e1, e2, e3, e4):
     embed = discord.Embed(
         title="Lies dir bitte vor der weiteren Nutzung diese Anleitung durch, damit du weißt, was zu tun ist und wie die Regeln sind.",
         description="Eine Übersicht, was Discord ist und wie es funktioniert, findest du per Klick auf die Überschrift.",
         color=0x26c606)
-    embed.set_author(name="Willkommen auf dem Discord-Server des FSR WiWi", url="https://support.discord.com/hc/de/articles/360045138571?utm_source=discord&utm_medium=blog&utm_campaign=2020-06_help-new-user&utm_content=--t%3Apm", icon_url = "https://fsrwiwi.de/wp-content/uploads/2020/10/image940-1024x1014.png")
+    embed.set_author(name="Willkommen auf dem Discord-Server des FSR WiWi",
+                     url="https://support.discord.com/hc/de/articles/360045138571?utm_source=discord&utm_medium=blog&utm_campaign=2020-06_help-new-user&utm_content=--t%3Apm",
+                     icon_url="https://fsrwiwi.de/wp-content/uploads/2020/10/image940-1024x1014.png")
     embed.add_field(name="1)",
                     value=" Der Discord-Server wurde für den Immatrikulationsjahrgang 2020 der Fakultät Wirtschaftswissenschaften erstellt. Er dient dem Austausch über das Studium, aber auch zur generellen Vernetzung. Lade bitte Freunde von anderen Fakultäten nur für den Vernetzungsteil ein. Diese sollten nach dem Vernetzungsabend am besten auch den Server wieder verlassen. Zugang gibt es für diese im Startchat über die Eingabe „Gast“.",
                     inline=False)
@@ -24,7 +26,8 @@ async def welcomemsg(ctx):
                     2. Kein Spam in Kanälen, Privatchats sollten auch privat geführt werden
                     3. Kein unangemessener Inhalt""",
                     inline=False)
-    embed.add_field(name="Wir wünschen viel Spaß :blush:", value="Wenn ihr Hilfe braucht, wendet euch an Mods oder schreibt dem FSR", inline=False)
+    embed.add_field(name="Wir wünschen viel Spaß :blush:",
+                    value="Wenn ihr Hilfe braucht, wendet euch an Mods oder schreibt dem FSR", inline=False)
     await ctx.channel.send(embed=embed)
 
     embed2 = discord.Embed(
@@ -35,11 +38,25 @@ async def welcomemsg(ctx):
     embed2.add_field(name="Wirtschaftspädagogik", value="!wipad", inline=False)
     embed2.add_field(name="Wirtschaftswissenschaften", value="!wiwi", inline=True)
     embed2.set_footer(
-        text="Sollte dir keine Rolle zugewiesen werden oder ein anderer Fehler auftreten, benutze !hilfe . Der Bot befinden sich noch in der Entwicklung, für Bugs möchten wir uns entschuldigen.")
-    await ctx.channel.send(embed=embed2)
-
+        text="Sollte dir keine Rolle zugewiesen werden oder ein anderer Fehler auftreten, benutze !hilfe <Grund> . Der Bot befinden sich noch in der Entwicklung, für Bugs möchten wir uns entschuldigen.")
+    mess = await ctx.channel.send(embed=embed2)
+    await mess.add_reaction(e1)
+    await mess.add_reaction(e2)
+    await mess.add_reaction(e3)
+    await mess.add_reaction(e4)
 
 async def confirmmsg(ctx, var):
     await ctx.author.send(
         "Du hast dich erfolgreich für {} registriert! Wenn du sonstige Hilfe benötigst, wende dich bitte an einen Moderator.".format(
             var))
+
+
+async def hilfemsg(ctx, channel, arg, emo):
+    embed = discord.Embed(title="{}".format(ctx.author.name), color=0xfe0101)
+    embed.set_author(name="OFFEN",
+                     icon_url=ctx.author.avatar_url)
+    embed.add_field(name="id:", value=ctx.author.id, inline=False)
+    embed.add_field(name="Grund:", value=arg, inline=False)
+    mess = await channel.send(embed=embed)
+    await mess.add_reaction(emo)
+
