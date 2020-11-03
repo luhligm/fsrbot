@@ -19,7 +19,6 @@ async def on_ready():
 @client.command()
 async def ping(ctx):
     await ctx.send(f'Pong --> {round(client.latency * 1000)} ms')
-    await welcomemsg(ctx)
 
 
 @client.command()
@@ -67,10 +66,12 @@ async def autodelete(message):
 
 @client.command()
 async def hilfe(ctx, *, arg):
+    if ctx.author.bot:
+        return
     channel = client.get_channel(pw.channelhilfe)
-    emo = client.get_emoji(773017948037185536)
+    emo = client.get_emoji(773074983831863307)
     await hilfemsg(ctx, channel, arg, emo)
-    await ctx.author.send("Deine Anfrage wurde gesendet")
+    await ctx.author.send(f"Deine Anfrage wurde gesendet ({arg})")
 
 
 @client.event
@@ -81,18 +82,18 @@ async def on_raw_reaction_add(payload):
     if payload.member.bot:
         return
 
-    if channel.id == pw.channelID and message.id == 773071590535331910:
+    if channel.id == pw.channelID and message.id == pw.regmess:
         user = payload.member
         print(payload)
         if rolecheck(user):
             if payload.emoji.name == 'winf':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='winf'))
+                await user.add_roles(discord.utils.get(user.guild.roles, name='WInformatiker'))
             if payload.emoji.name == 'wiwi':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='wiwi'))
+                await user.add_roles(discord.utils.get(user.guild.roles, name='WWissenschaftler'))
             if payload.emoji.name == 'wipad':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='wipäd'))
+                await user.add_roles(discord.utils.get(user.guild.roles, name='WPädagoge'))
             if payload.emoji.name == 'wing':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='wing'))
+                await user.add_roles(discord.utils.get(user.guild.roles, name='WIngeneur'))
             await message.remove_reaction(payload.emoji, user)
 
     if channel.id == pw.channelhilfe:
@@ -113,10 +114,10 @@ async def on_raw_reaction_add(payload):
 
 @client.command()
 async def createreg(ctx):
-    e1 = client.get_emoji(773058764181995541)
-    e2 = client.get_emoji(773058763930337280)
-    e3 = client.get_emoji(773058764277284864)
-    e4 = client.get_emoji(773058763950653450)
+    e1 = client.get_emoji(773074983798571058)
+    e2 = client.get_emoji(773074983449788416)
+    e3 = client.get_emoji(773074983579811850)
+    e4 = client.get_emoji(773074983412301864)
     await welcomemsg(ctx, e1, e2, e3, e4)
 
 
