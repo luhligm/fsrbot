@@ -1,29 +1,40 @@
 import discord
-from pw import channelID
+from mongodb import getUser
 
 
-# Test ob Rolle schon vergeben ist, dass man keine zwei Kurse bekommen kann
-
-def rolecheck(user):
-    role1 = discord.utils.get(user.guild.roles, name='WInformatiker')
-    role2 = discord.utils.get(user.guild.roles, name='WIngeneur')
-    role3 = discord.utils.get(user.guild.roles, name='WPädagoge')
-    role4 = discord.utils.get(user.guild.roles, name='WWissenschaftler')
-
-    if role1 in user.roles:
-        return False
-    elif role2 in user.roles:
-        return False
-    elif role3 in user.roles:
-        return False
-    elif role4 in user.roles:
-        return False
-    else:
-        return True
+# wenn in keiner Rolle dann True
 
 
-# Test ob Nachricht in hinterlegtem Channel gesendet wurde
+def giveRole(user):
+    jg = getUser(user.id)['jg']
+    sg = getUser(user.id)['sg']
+    if sg == 'winf':
+        if jg == '2020':
+            return 'WInformatik2020'
+        elif jg == '2019':
+            return 'WInformatik2019'
+        elif jg == '2018':
+            return 'WInformatik2018'
+    elif sg == 'wing':
+        if jg == '2020':
+            return 'WIngeneur2020'
+        elif jg == '2019':
+            return 'WIngeneur2019'
+        elif jg == '2018':
+            return 'WIngeneur2018'
+    elif sg == 'wiwi':
+        if jg == '2020':
+            return 'WWissenschaften2020'
+        elif jg == '2019':
+            return 'WWissenschaften2019'
+        elif jg == '2018':
+            return 'WWissenschaften2018'
+    elif sg == 'wipad':
+        if jg == '2020':
+            return 'WPädagoge2020'
+        elif jg == '2019':
+            return 'WPädagoge2019'
+        elif jg == '2018':
+            return 'WPädagoge2018'
 
-def isRegisterChannel(ctx):
-    if ctx.channel.id == channelID:
-        return True
+
