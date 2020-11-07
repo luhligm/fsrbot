@@ -1,19 +1,18 @@
 import asyncio
-
 import discord
-from discord import member
+import datetime
 from discord.ext import commands
-
-import pw
-from fuctions import rolecheck, channelID, isRegisterChannel
-from msgcontent import welcomemsg, confirmmsg, hilfemsg
+from mongodb import alreadyExists, collection, getUser, editUser, getConfig
+from fuctions import giveRole
+from msgcontent import welcomemsg, confirmmsg
 
 client = commands.Bot(command_prefix="!")
 
 
 @client.event
 async def on_ready():
-    print('geladen')
+    print('[FSRBot] Script erfolgreich geladen')
+    print(f'[FSRBot] Bot online ({round(client.latency * 1000)} ms)')
 
 
 @client.command()
@@ -21,57 +20,11 @@ async def ping(ctx):
     await ctx.send(f'Pong --> {round(client.latency * 1000)} ms')
 
 
-@client.command()
-async def wipad(ctx):
-    role = 'WPädagoge'
-    if rolecheck(ctx.author) and isRegisterChannel(ctx):
-        user = ctx.message.author
-        await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await confirmmsg(ctx, 'WPädagogik')
-
-
-@client.command()
-async def winf(ctx):
-    role = 'WInformatiker'
-    if rolecheck(ctx.author) and isRegisterChannel(ctx):
-        user = ctx.message.author
-        await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await confirmmsg(ctx, 'WInformatik')
-
-
-@client.command()
-async def wing(ctx):
-    role = 'WIngeneur'
-    if rolecheck(ctx.author) and isRegisterChannel(ctx):
-        user = ctx.message.author
-        await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await confirmmsg(ctx, 'WIngeneurswesen')
-
-
-@client.command()
-async def wiwi(ctx):
-    role = 'WWissenschaftler'
-    if rolecheck(ctx.author) and isRegisterChannel(ctx):
-        user = ctx.message.author
-        await user.add_roles(discord.utils.get(user.guild.roles, name=role))
-        await confirmmsg(ctx, 'WWissenschaften')
-
-
 @client.listen('on_message')
 async def autodelete(message):
-    if isRegisterChannel(message) and not message.author.bot:
+    if message.channel.id == getConfig('regChannel') and not message.author.bot:
         await asyncio.sleep(1)
         await message.delete()
-
-
-@client.command()
-async def hilfe(ctx, *, arg):
-    if ctx.author.bot:
-        return
-    channel = client.get_channel(pw.channelhilfe)
-    emo = client.get_emoji(773074983831863307)
-    await hilfemsg(ctx, channel, arg, emo)
-    await ctx.author.send(f"Deine Anfrage wurde gesendet ({arg})")
 
 
 @client.event
@@ -82,43 +35,56 @@ async def on_raw_reaction_add(payload):
     if payload.member.bot:
         return
 
-    if channel.id == pw.channelID and message.id == pw.regmess:
+    if channel.id == getConfig('regChannel'):
         user = payload.member
-        print(payload)
-        if rolecheck(user):
-            if payload.emoji.name == 'winf':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='WInformatiker'))
-            if payload.emoji.name == 'wiwi':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='WWissenschaftler'))
-            if payload.emoji.name == 'wipad':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='WPädagoge'))
-            if payload.emoji.name == 'wing':
-                await user.add_roles(discord.utils.get(user.guild.roles, name='WIngeneur'))
-            await message.remove_reaction(payload.emoji, user)
 
-    if channel.id == pw.channelhilfe:
-        if payload.emoji.name == 'SOLVED':
-            dict_embed = message.embeds[0].to_dict()
-            dict_embed['color'] = 0x26c606
+        if alreadyExists(user.id) is False:
+            post = {'_id': user.id, 'displayName': user.name, 'joinTime': datetime.datetime.utcnow(), 'role': "not set",
+                    'isRegSG': False, 'isRegJG': False}
+            collection.insert_one(post)
 
-            id = int(dict_embed['fields'][0]['value'])
-            user = client.get_user(id)
+        if getUser(user.id)['role'] == "not set":
+            if message.id == getConfig('firstRegMsg'):
+                if payload.emoji.name == 'winf':
+                    editUser(user.id, 'sg', 'winf')
+                if payload.emoji.name == 'wiwi':
+                    editUser(user.id, 'sg', 'wiwi')
+                if payload.emoji.name == 'wipad':
+                    editUser(user.id, 'sg', 'wipad')
+                if payload.emoji.name == 'wing':
+                    editUser(user.id, 'sg', 'wing')
+                editUser(user.id, 'isRegSG', True)
 
-            new_embed = discord.Embed.from_dict(dict_embed)
-            new_embed.set_author(name="GESCHLOSSEN")
+            if message.id == getConfig('secondRegMsg'):
+                if payload.emoji.name == 'fsr20':
+                    editUser(user.id, 'jg', '2020')
+                if payload.emoji.name == 'fsr19':
+                    editUser(user.id, 'jg', '2019')
+                if payload.emoji.name == '2018+':
+                    editUser(user.id, 'jg', 'fsr18')
+                editUser(user.id, 'isRegJG', True)
 
-            await user.send("Deine Anfrage wurde bearbeitet")
-            await message.delete()
-            await channel.send(embed=new_embed)
+        if getUser(user.id)['isRegSG'] and getUser(user.id)['isRegJG']:
+            print('beides wurde gewählt')
+            role = giveRole(user)
+            print(role)
+            editUser(user.id, 'role', role)
+            await user.add_roles(discord.utils.get(user.guild.roles, name=role))
+        else:
+            print('noch nicht beides ausgewählt')
+    await message.remove_reaction(payload.emoji, user)
 
 
 @client.command()
-async def createreg(ctx):
-    e1 = client.get_emoji(773074983798571058)
-    e2 = client.get_emoji(773074983449788416)
-    e3 = client.get_emoji(773074983579811850)
-    e4 = client.get_emoji(773074983412301864)
-    await welcomemsg(ctx, e1, e2, e3, e4)
+async def createmsg(ctx, arg):
+    e1 = client.get_emoji(773074983449788416)   # Wing
+    e2 = client.get_emoji(773074983798571058)   # Winf
+    e3 = client.get_emoji(773074983579811850)   # Wiwi
+    e4 = client.get_emoji(773074983412301864)   # Wipad
+    e5 = client.get_emoji(774457516108021790)   # 2020
+    e6 = client.get_emoji(774457516028985445)   # 2019
+    e7 = client.get_emoji(774457515961614339)   # 2018
+    await welcomemsg(ctx, arg, e1, e2, e3, e4, e5, e6, e7)
 
 
-client.run(pw.TOKEN)
+client.run(getConfig('TOKEN'))
