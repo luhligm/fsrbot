@@ -2,11 +2,11 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-  'user': 'root',
-  'password': 'MariaDB10!',
-  'host': 'uhligs.synology.me',
-  'port': 3307,
-  'database': 'fsrbot'
+  'user': '',
+  'password': '',
+  'host': '',
+  'port': ,
+  'database': ''
 }
 
 try:
