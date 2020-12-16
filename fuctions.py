@@ -1,10 +1,9 @@
 import discord
-from mongodb import getUser
+from mariadb import *
 
 
 # wenn in keiner Rolle dann True
-
-
+# gibt einem User Rollen
 def giveRole(user):
     jg = getUser(user.id)['jg']
     sg = getUser(user.id)['sg']

@@ -1,25 +1,41 @@
+# Einstiegspunkt des Pythonsscript
+
 import asyncio
 import discord
 import datetime
 from discord.ext import commands
-from mongodb import alreadyExists, collection, getUser, editUser, getConfig
+from mariadb import *
 from fuctions import giveRole
 from msgcontent import welcomemsg, confirmmsg
 
+"""
+erzeugt Instanz von Client
+Client ist die Verbindung zum Discordserver
+Der Client reagiert auf alle nachrichten mit dem Präfix (!)
+"""
 client = commands.Bot(command_prefix="!")
 
-
+#Ausgabe ob Bot erfolgreich gestartet und Client Latency in Terminal nach Start des Scripts
 @client.event
 async def on_ready():
-    print('[FSRBot] Script erfolgreich geladen')
+    print('[FSRBot] Script erfolgreich geladen und der Client hat eine Verbindung zum Server aufgebaut')
     print(f'[FSRBot] Bot online ({round(client.latency * 1000)} ms)')
 
-
+#Test Ping, Antwort Ping, was ist der Trigger?
 @client.command()
 async def ping(ctx):
     await ctx.send(f'Pong --> {round(client.latency * 1000)} ms')
 
 
+
+# erzeugt message für welcome- und registrierungschannel
+@client.command()
+async def createmsg(ctx, arg):
+
+    await welcomemsg(client, ctx, arg)
+
+
+# Löscht Nachricht
 @client.listen('on_message')
 async def autodelete(message):
     if message.channel.id == getConfig('regChannel') and not message.author.bot:
@@ -27,22 +43,27 @@ async def autodelete(message):
         await message.delete()
 
 
+# Event, dass auf Auswahl der Emoji reagiert (payload = message data)
 @client.event
 async def on_raw_reaction_add(payload):
     channel = client.get_channel(payload.channel_id)
     message = await channel.fetch_message(payload.message_id)
 
+    # keine Reaktion, fall der Bot der Auslöser war
     if payload.member.bot:
         return
 
+    # reagiert nur auf Emoji im registrierung Channel
     if channel.id == getConfig('regChannel'):
         user = payload.member
 
+        # User ist noch nicht in der Datenbank
         if alreadyExists(user.id) is False:
-            post = {'_id': user.id, 'displayName': user.name, 'joinTime': datetime.datetime.utcnow(), 'role': "not set",
+            userData = {'_id': user.id, 'displayName': user.name, 'joinTime': datetime.datetime.utcnow(), 'role': "not set",
                     'isRegSG': False, 'isRegJG': False}
-            collection.insert_one(post)
+            addUser(userData)
 
+        # User ist schon in der Datenbank, hat aber noch keine Rolle
         if getUser(user.id)['role'] == "not set":
             if message.id == getConfig('firstRegMsg'):
                 if payload.emoji.name == 'winf':
@@ -64,6 +85,7 @@ async def on_raw_reaction_add(payload):
                     editUser(user.id, 'jg', 'fsr18')
                 editUser(user.id, 'isRegJG', True)
 
+        # user hat beide emoji ausgewählt -> bekommt Rollen
         if getUser(user.id)['isRegSG'] and getUser(user.id)['isRegJG']:
             print('beides wurde gewählt')
             role = giveRole(user)
@@ -72,19 +94,9 @@ async def on_raw_reaction_add(payload):
             await user.add_roles(discord.utils.get(user.guild.roles, name=role))
         else:
             print('noch nicht beides ausgewählt')
+
+    # entfernt Reaktion auf den Emoji
     await message.remove_reaction(payload.emoji, user)
 
-
-@client.command()
-async def createmsg(ctx, arg):
-    e1 = client.get_emoji(773074983449788416)   # Wing
-    e2 = client.get_emoji(773074983798571058)   # Winf
-    e3 = client.get_emoji(773074983579811850)   # Wiwi
-    e4 = client.get_emoji(773074983412301864)   # Wipad
-    e5 = client.get_emoji(774457516108021790)   # 2020
-    e6 = client.get_emoji(774457516028985445)   # 2019
-    e7 = client.get_emoji(774457515961614339)   # 2018
-    await welcomemsg(ctx, arg, e1, e2, e3, e4, e5, e6, e7)
-
-
+# startet den Client
 client.run(getConfig('TOKEN'))
