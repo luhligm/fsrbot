@@ -13,7 +13,7 @@ config = db['fsrconfig']
 #     return data[str(arg)]
 #
 # # Userabfrage aus der Datenbank anhand der ID
-# def getUser(id):
+#def getUser(id):
 #     query = {"_id": {"$eq": id}}
 #     return collection.find_one(query)
 #

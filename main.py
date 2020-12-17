@@ -2,9 +2,9 @@
 
 import asyncio
 import discord
-import datetime
+from datetime import *
 from discord.ext import commands
-from mariadb import *
+from mariadbConnector import *
 from fuctions import giveRole
 from msgcontent import welcomemsg, confirmmsg
 
@@ -58,39 +58,38 @@ async def on_raw_reaction_add(payload):
         user = payload.member
 
         # User ist noch nicht in der Datenbank
-        if alreadyExists(user.id) is False:
-            userData = {'_id': user.id, 'displayName': user.name, 'joinTime': datetime.datetime.utcnow(), 'role': "not set",
-                    'isRegSG': False, 'isRegJG': False}
-            addUser(userData)
+        if userAlreadyExists(user.id) is False:
+            joinTime = datetime.now()
+            addUser(user.id,user.name,joinTime,)
 
         # User ist schon in der Datenbank, hat aber noch keine Rolle
-        if getUser(user.id)['role'] == "not set":
+        # woher kommt payload.emoji.name ?
+        if getAllUserEigenschaften(user.id)['role'] == None:
             if message.id == getConfig('firstRegMsg'):
                 if payload.emoji.name == 'winf':
-                    editUser(user.id, 'sg', 'winf')
+                    editUser(user.id, studiengang = 'winf')
                 if payload.emoji.name == 'wiwi':
-                    editUser(user.id, 'sg', 'wiwi')
+                    editUser(user.id, studiengang = 'wiwi')
                 if payload.emoji.name == 'wipad':
-                    editUser(user.id, 'sg', 'wipad')
+                    editUser(user.id, studiengang = 'wipad')
                 if payload.emoji.name == 'wing':
-                    editUser(user.id, 'sg', 'wing')
-                editUser(user.id, 'isRegSG', True)
+                    editUser(user.id, studiengang = 'wing')
 
             if message.id == getConfig('secondRegMsg'):
                 if payload.emoji.name == 'fsr20':
-                    editUser(user.id, 'jg', '2020')
+                    editUser(user.id, jahrgang =  '2020')
                 if payload.emoji.name == 'fsr19':
-                    editUser(user.id, 'jg', '2019')
+                    editUser(user.id, jahrgang = '2019')
                 if payload.emoji.name == '2018+':
-                    editUser(user.id, 'jg', 'fsr18')
-                editUser(user.id, 'isRegJG', True)
+                    editUser(user.id, jahrgang = 'fsr18')
+
 
         # user hat beide emoji ausgewählt -> bekommt Rollen
-        if getUser(user.id)['isRegSG'] and getUser(user.id)['isRegJG']:
+        if getAllUserEigenschaften(user.id)['jahrgang'] and getAllUserEigenschaften(user.id)['studiengang']:
             print('beides wurde gewählt')
             role = giveRole(user)
             print(role)
-            editUser(user.id, 'role', role)
+            editUser(user.id, role= role)
             await user.add_roles(discord.utils.get(user.guild.roles, name=role))
         else:
             print('noch nicht beides ausgewählt')

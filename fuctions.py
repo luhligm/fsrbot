@@ -1,12 +1,12 @@
 import discord
-from mariadb import *
+from mariadbConnector import *
 
 
 # wenn in keiner Rolle dann True
 # gibt einem User Rollen
 def giveRole(user):
-    jg = getUser(user.id)['jg']
-    sg = getUser(user.id)['sg']
+    jg = getAllUserEigenschaften(user.id)['jahrgang']
+    sg = getAllUserEigenschaften(user.id)['studiengang']
     if sg == 'winf':
         if jg == '2020':
             return 'WInformatik2020'
