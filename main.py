@@ -5,8 +5,11 @@ import discord
 from datetime import *
 from discord.ext import commands
 from mariadbConnector import *
-from fuctions import giveRole
+from fuctions import matchJahrgangAndStudiengangToRole
 from msgcontent import welcomemsg, confirmmsg
+from user import User
+import config
+
 
 """
 erzeugt Instanz von Client
@@ -14,6 +17,8 @@ Client ist die Verbindung zum Discordserver
 Der Client reagiert auf alle nachrichten mit dem Präfix (!)
 """
 client = commands.Bot(command_prefix="!")
+config = config.Config()
+
 
 #Ausgabe ob Bot erfolgreich gestartet und Client Latency in Terminal nach Start des Scripts
 @client.event
@@ -38,7 +43,7 @@ async def createmsg(ctx, arg):
 # Löscht Nachricht
 @client.listen('on_message')
 async def autodelete(message):
-    if message.channel.id == getConfig('regChannel') and not message.author.bot:
+    if message.channel.id == config.regChannel and not message.author.bot:
         await asyncio.sleep(1)
         await message.delete()
 
@@ -54,48 +59,45 @@ async def on_raw_reaction_add(payload):
         return
 
     # reagiert nur auf Emoji im registrierung Channel
-    if channel.id == getConfig('regChannel'):
-        user = payload.member
-
-        # User ist noch nicht in der Datenbank
-        if userAlreadyExists(user.id) is False:
-            joinTime = datetime.now()
-            addUser(user.id,user.name,joinTime,)
+    if channel.id == config.regChannel:
+        #User wird in der Datenbank angelegt oder seine Eingeschaften werden aus der Datenbank geleden
+        user = User(payload.member.id, payload.member.name)
 
         # User ist schon in der Datenbank, hat aber noch keine Rolle
-        # woher kommt payload.emoji.name ?
-        if getAllUserEigenschaften(user.id)['role'] == None:
-            if message.id == getConfig('firstRegMsg'):
+        if user.role == None:
+            if message.id == config.firstRegMsg:
                 if payload.emoji.name == 'winf':
-                    editUser(user.id, studiengang = 'winf')
+                    user.setStudiengang('winf')
                 if payload.emoji.name == 'wiwi':
-                    editUser(user.id, studiengang = 'wiwi')
+                    user.setStudiengang('wiwi')
                 if payload.emoji.name == 'wipad':
-                    editUser(user.id, studiengang = 'wipad')
+                    user.setStudiengang('wipäd')
                 if payload.emoji.name == 'wing':
-                    editUser(user.id, studiengang = 'wing')
+                    user.setStudiengang('wing')
 
-            if message.id == getConfig('secondRegMsg'):
+            if message.id == config.secondRegMsg:
                 if payload.emoji.name == 'fsr20':
-                    editUser(user.id, jahrgang =  '2020')
+                    user.setJahrgang('2020')
                 if payload.emoji.name == 'fsr19':
-                    editUser(user.id, jahrgang = '2019')
+                    user.setJahrgang('2019')
                 if payload.emoji.name == '2018+':
-                    editUser(user.id, jahrgang = 'fsr18')
+                    user.setJahrgang('2018')
 
 
-        # user hat beide emoji ausgewählt -> bekommt Rollen
-        if getAllUserEigenschaften(user.id)['jahrgang'] and getAllUserEigenschaften(user.id)['studiengang']:
+
+        # user hat beide emoji ausgewählt (hat Studiengang und Jahrgang) -> bekommt Rolle
+        if user.jahrgang and user.studiengang:
             print('beides wurde gewählt')
-            role = giveRole(user)
+            role = matchJahrgangAndStudiengangToRole(user)
             print(role)
-            editUser(user.id, role= role)
-            await user.add_roles(discord.utils.get(user.guild.roles, name=role))
+            user.setRole(role)
+            await payload.member.add_roles(discord.utils.get(payload.membe.guild.roles, name=role))
         else:
             print('noch nicht beides ausgewählt')
 
     # entfernt Reaktion auf den Emoji
-    await message.remove_reaction(payload.emoji, user)
+    await message.remove_reaction(payload.emoji, payload.member)
 
 # startet den Client
-client.run(getConfig('TOKEN'))
+client.run(config.botToken)
+# connection.close()

@@ -1,93 +1,100 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-config = {
-  'user': 'root',
-  'password': 'MariaDB10!',
-  'host': '192.168.178.23',
-  'port': 3307,
-  'database': 'fsrbot'
-}
+class ConnectionToDatabase:
+    def __init__(self,dbConfig):
+        self.connection = connectToDatabase(dbConfig)
+        self.cursor = self.connection.cursor()
 
+    #fügt User das erste Mal der Datenbank hinzu
+    def addUser(self,discordID,displayName,joinTime,jahrgang = None, studiengang = None):
+        sql = "INSERT INTO user (discordID,displayName,joinTime,jahrgang,studiengang) VALUES (%s, %s, %s,%s,%s)"
+        var = (discordID,displayName,joinTime,jahrgang,studiengang)
 
-#fügt User das erste Mal der Datenbank hinzu
-def addUser(discordID,displayName,joinTime):
-    sql = "INSERT INTO user (discordID,displayName,joinTime) VALUES (%s, %s, %s)"
-    var = (discordID,displayName,joinTime)
+        self.cursor.execute(sql, var)
+        self.connection.commit()
 
-    cursor.execute(sql, var)
-    connection.commit()
+    #Überprüft, ob User mit der ID einen Datenbankeintrag hat
+    def userAlreadyExists(self,discordID):
+        sql = 'SELECT Count(id) FROM user WHERE discordID = {}'.format(discordID)
 
-#Überprüft, ob User mit der ID einen Datenbankeintrag hat
-def userAlreadyExists(discordID):
-    sql = 'SELECT Count(id) FROM user WHERE discordID = {}'.format(discordID)
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()[0][0]
+        return bool(result)
 
-    cursor.execute(sql)
-    result = cursor.fetchall()[0][0]
-    return bool(result)
+    # löscht User
+    def deleteUser(self,discordID):
+        sql = 'DELETE FROM user WHERE discordID = {}'.format(discordID)
 
-# löscht User
-def deleteUser(discordID):
-    sql = 'DELETE FROM user WHERE discordID = {}'.format(discordID)
+        self.cursor.execute(sql)
+        self.connection.commit()
 
-    cursor.execute(sql)
-    connection.commit()
+    # edit User
+    def editUser(self,discordID,role = None,jahrgang = None, studiengang = None, name= None,joinTime= None, leaveTime= None):
+        sql = "UPDATE user SET "
+        #formt String in SQL Syntax
+        if not role == 'NULL': sql +=  "role = '{}',".format(role)
+        if not jahrgang == 'NULL': sql += "jahrgang = '{}',".format(jahrgang)
+        if not studiengang == 'NULL': sql +="studiengang = '{}',".format(studiengang)
+        if not name == 'NULL':  sql +="name ='{}',".format(name)
+        if not joinTime == 'NULL': sql += "joinTime ='{}'".format(joinTime)
+        if not leaveTime == 'NULL':sql +=  "leaveTime ='{}'".format(leaveTime)
+        sql += "WHERE discordID = {}".format(discordID)
 
-# edit User
-def editUser(discordID,role = 'NULL',jahrgang = 'NULL', studiengang = 'NULL'):
-    #formt String in SQL Syntax
-    if not role == 'NULL': role = "'{}'".format(role)
-    if not jahrgang == 'NULL': jahrgang = "'{}'".format(jahrgang)
-    if not studiengang == 'NULL': studiengang = "'{}'".format(studiengang)
+        self.cursor.execute(sql)
+        self.connection.commit()
 
-    sql = "UPDATE user SET " \
-          "role = (CASE WHEN role IS NULL THEN {} ELSE role END)," \
-          "jahrgang = (CASE WHEN jahrgang IS NULL THEN {} ELSE jahrgang END)," \
-          "studiengang = (CASE WHEN studiengang IS NULL THEN {} ELSE studiengang END) " \
-          "WHERE discordID = {}"\
-        .format(role,jahrgang,studiengang, discordID)
+    def getAllUserEigenschaften(self,discordID):
+        sql = "SELECT * FROM user WHERE discordID = {}".format(discordID)
 
-    cursor.execute(sql)
-    connection.commit()
-def getAllUserEigenschaften(discordID):
-    sql = "SELECT * FROM user WHERE discordID = {}".format(discordID)
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
 
-    cursor.execute(sql)
-    result = cursor.fetchall()
-
-    result = {
+        result = {
         'role': result[0][1],
         'discordID': result[0][2],
         'displlayName': result[0][3],
         'joinTime': result[0][4],
         'jahrgang': result[0][5],
         'studiengang': result[0][6]
-    }
-    return result
+        }
+        return result
 
-def getConfig(feld):
-    sql = "SELECT {} FROM config WHERE ID = 1".format(feld)
+    def getUserEigenschaft(self,discordID, eigenschaft):
+        sql="SELECT {} FROM user WHERE discordID = {}".format(eigenschaft,discordID)
 
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    return result[0][0]
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        return result[0]
 
 
-try:
-  connection = mysql.connector.connect(**config)
-  cursor = connection.cursor()
-  #addUser('6','testuser','2020-01-01 07:24:24')
-  #userAlreadyExists(1)
-  #editUser(5, studiengang = 'tes',role = 'r' )
-  #getAllUserEigenschaften('6')
-  #getConfig('Token')
-except mysql.connector.Error as err:
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("Something is wrong with your user name or password")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("Database does not exist")
-  else:
-    print(err)
-else:
-    pass
-  #connection.close()
+
+    def getConfig(self,feld):
+        sql = "SELECT wert FROM config WHERE feld = '{}'".format(feld)
+
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        return result[0][0]
+
+def connectToDatabase(dbConfig):
+        try:
+            connection = mysql.connector.connect(
+                user=dbConfig.user,
+                password=dbConfig.password,
+                host=dbConfig.host,
+                port=dbConfig.port,
+                database=dbConfig.database
+            )
+            return connection
+            #addUser('6','testuser','2020-01-01 07:24:24')
+            #userAlreadyExists(1)
+            #editUser(5, studiengang = 'tes',role = 'r' )
+            #getAllUserEigenschaften('6')
+            #getConfig('Token')
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your DB user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
