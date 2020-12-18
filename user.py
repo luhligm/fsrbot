@@ -83,3 +83,5 @@ class User:
     def userAlreadyExists(self):
         return self.dbConnection.userAlredyExists(self.discordID)
 
+    def delUser(self):
+        self.dbConnection.deleteUser(self, self.discordID)

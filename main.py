@@ -98,6 +98,14 @@ async def on_raw_reaction_add(payload):
     # entfernt Reaktion auf den Emoji
     await message.remove_reaction(payload.emoji, payload.member)
 
+@client.event
+async def on_member_remove(member):
+    user = User(member.id, member.name)
+    user.delUser()
+
+
+
+
 # startet den Client
 client.run(config.botToken)
 # connection.close()
