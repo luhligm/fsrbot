@@ -48,6 +48,7 @@ async def autodelete(message):
         await message.delete()
 
 
+
 # Event, dass auf Auswahl der Emoji reagiert (payload = message data)
 @client.event
 async def on_raw_reaction_add(payload):
@@ -57,15 +58,19 @@ async def on_raw_reaction_add(payload):
     # keine Reaktion, fall der Bot der Auslöser war
     if payload.member.bot:
         return
-
+    print('kein Bot')
     # reagiert nur auf Emoji im registrierung Channel
     if channel.id == config.regChannel:
+        print('im Reg Channel')
         #User wird in der Datenbank angelegt oder seine Eingeschaften werden aus der Datenbank geleden
         user = User(payload.member.id, payload.member.name)
 
         # User ist schon in der Datenbank, hat aber noch keine Rolle
         if user.role == None:
+            print('user hat noch keine Rolle')
+
             if message.id == config.firstRegMsg:
+                print('setstudiengang: ',payload.emoji.name)
                 if payload.emoji.name == 'winf':
                     user.setStudiengang('winf')
                 if payload.emoji.name == 'wiwi':
@@ -75,12 +80,14 @@ async def on_raw_reaction_add(payload):
                 if payload.emoji.name == 'wing':
                     user.setStudiengang('wing')
 
+            print(message.id == config.secondRegMsg)
             if message.id == config.secondRegMsg:
+                print('setjahrgang: ',payload.emoji.name)
                 if payload.emoji.name == 'fsr20':
                     user.setJahrgang('2020')
                 if payload.emoji.name == 'fsr19':
                     user.setJahrgang('2019')
-                if payload.emoji.name == '2018+':
+                if payload.emoji.name == 'fsr18':
                     user.setJahrgang('2018')
 
 
@@ -88,10 +95,11 @@ async def on_raw_reaction_add(payload):
         # user hat beide emoji ausgewählt (hat Studiengang und Jahrgang) -> bekommt Rolle
         if user.jahrgang and user.studiengang:
             print('beides wurde gewählt')
+            print(user.studiengang,user.jahrgang)
             role = matchJahrgangAndStudiengangToRole(user)
             print(role)
             user.setRole(role)
-            await payload.member.add_roles(discord.utils.get(payload.membe.guild.roles, name=role))
+            await payload.member.add_roles(discord.utils.get(payload.member.guild.roles, name=role))
         else:
             print('noch nicht beides ausgewählt')
 
@@ -107,5 +115,5 @@ async def on_member_remove(member):
 
 
 # startet den Client
-client.run(config.botToken)
+client.run('NzcxNDExMjU5OTQwNjY3Mzky.X5ruuA.vNOcIXtNBvL76rhngLvnopOTy6k')#config.botToken)
 # connection.close()

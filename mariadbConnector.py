@@ -33,13 +33,16 @@ class ConnectionToDatabase:
     def editUser(self,discordID,role = None,jahrgang = None, studiengang = None, name= None,joinTime= None, leaveTime= None):
         sql = "UPDATE user SET "
         #formt String in SQL Syntax
-        if not role == 'NULL': sql +=  "role = '{}',".format(role)
-        if not jahrgang == 'NULL': sql += "jahrgang = '{}',".format(jahrgang)
-        if not studiengang == 'NULL': sql +="studiengang = '{}',".format(studiengang)
-        if not name == 'NULL':  sql +="name ='{}',".format(name)
-        if not joinTime == 'NULL': sql += "joinTime ='{}'".format(joinTime)
-        if not leaveTime == 'NULL':sql +=  "leaveTime ='{}'".format(leaveTime)
-        sql += "WHERE discordID = {}".format(discordID)
+        if not role == None: sql +=  "role = '{}',".format(role)
+        if not jahrgang == None: sql += "jahrgang = '{}',".format(jahrgang)
+        if not studiengang == None: sql +="studiengang = '{}',".format(studiengang)
+        if not name == None:  sql +="displayName ='{}',".format(name)
+        if not joinTime == None: sql += "joinTime ='{}',".format(joinTime)
+        if not leaveTime == None:sql +=  "leaveTime ='{}',".format(leaveTime)
+        sql += "discordID = '{}'".format(discordID)
+        sql += " WHERE discordID = {}".format(discordID)
+
+        print(sql)
 
         self.cursor.execute(sql)
         self.connection.commit()
@@ -65,7 +68,7 @@ class ConnectionToDatabase:
 
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
-        return result[0]
+        return result[0][0]
 
 
 

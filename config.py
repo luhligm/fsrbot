@@ -15,9 +15,9 @@ class Config:
         #todo eine gemeinsame DB Abfrage
         self.dbConnection = mariadbConnector.ConnectionToDatabase(DBConfig())
         self.botToken = self.dbConnection.getConfig('Token')
-        self.regChannel = self.dbConnection.getConfig('regChannel')
-        self.firstRegMsg = self.dbConnection.getConfig('firstRegChannel')
-        self.secondRegMsg = self.dbConnection.getConfig('secondRegMsg')
+        self.regChannel = int(self.dbConnection.getConfig('regChannel'))
+        self.firstRegMsg = int(self.dbConnection.getConfig('firstRegMsg'))
+        self.secondRegMsg = int(self.dbConnection.getConfig('secondRegMsg'))
 
 
 class DBConfig:
