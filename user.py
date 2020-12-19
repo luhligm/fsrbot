@@ -76,7 +76,7 @@ class User:
         self.dbConnection.editUser(self.discordID, jahrgang=int(jahrgang))
 
     def getJahrgang(self):
-        return self.dbConnection.getUserEigenschaft(self.discordID,'jahrgang')
+        return str(self.dbConnection.getUserEigenschaft(self.discordID,'jahrgang'))
 
     def addUserToDatabase(self):
         self.dbConnection.addUser(self.discordID, self.name, self.joinTime,self.jahrgang,self.studiengang)

@@ -97,7 +97,7 @@ async def on_raw_reaction_add(payload):
             print('beides wurde gewählt')
             print(user.studiengang,user.jahrgang)
             role = matchJahrgangAndStudiengangToRole(user)
-            print('role: ',role)
+            print('role: ',role,type(role))
             user.setRole(role)
             await payload.member.add_roles(discord.utils.get(payload.member.guild.roles, name=role))
         else:

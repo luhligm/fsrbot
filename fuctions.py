@@ -37,5 +37,3 @@ def matchJahrgangAndStudiengangToRole(user):
             return 'WPädagoge2019'
         elif jahrgang == '2018':
             return 'WPädagoge2018'
-
-
