@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 18. Dez 2020 um 20:07
+-- Erstellungszeit: 19. Dez 2020 um 13:41
 -- Server-Version: 10.3.21-MariaDB
 -- PHP-Version: 7.2.29
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `config` (
-  `ID` int(11) NOT NULL,
+  `ID` tinyint(4) NOT NULL,
   `feld` varchar(120) NOT NULL,
   `wert` varchar(120) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -40,9 +40,33 @@ CREATE TABLE `config` (
 
 INSERT INTO `config` (`ID`, `feld`, `wert`) VALUES
 (2, 'regChannel', '771398994651381842'),
-(3, 'Token', 'NzcxNDExMjU5OTQwNjY3Mzky.X5ruuA.vNOcIXtNBvL76rhngLvnopOTy6k'),
+(3, 'Token', 'NzcxNDExMjU5OTQwNjY3Mzky.X5ruuA.QoXpwA-sfhMYaoNMOVH-DYFsZ5Q'),
 (4, 'firstRegMsg', '774465363437944834'),
 (5, 'secondRegMsg', '774465370828046336');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `user`
+--
+
+CREATE TABLE `user` (
+  `ID` smallint(6) NOT NULL,
+  `role` varchar(120) DEFAULT NULL,
+  `discordID` varchar(25) NOT NULL,
+  `displayName` varchar(40) NOT NULL,
+  `joinTime` datetime NOT NULL,
+  `jahrgang` smallint(6) DEFAULT NULL,
+  `studiengang` varchar(40) DEFAULT NULL,
+  `leaveTime` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Daten für Tabelle `user`
+--
+
+INSERT INTO `user` (`ID`, `role`, `discordID`, `displayName`, `joinTime`, `jahrgang`, `studiengang`, `leaveTime`) VALUES
+(72, 'WInformatik2020', '691570831645737010', 'luhlig', '2020-12-19 12:03:57', 2020, 'winf', NULL);
 
 --
 -- Indizes der exportierten Tabellen
@@ -55,6 +79,13 @@ ALTER TABLE `config`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indizes für die Tabelle `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `discordID` (`discordID`);
+
+--
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
@@ -62,7 +93,13 @@ ALTER TABLE `config`
 -- AUTO_INCREMENT für Tabelle `config`
 --
 ALTER TABLE `config`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+
+--
+-- AUTO_INCREMENT für Tabelle `user`
+--
+ALTER TABLE `user`
+  MODIFY `ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

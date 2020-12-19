@@ -97,7 +97,7 @@ async def on_raw_reaction_add(payload):
             print('beides wurde gewählt')
             print(user.studiengang,user.jahrgang)
             role = matchJahrgangAndStudiengangToRole(user)
-            print(role)
+            print('role: ',role)
             user.setRole(role)
             await payload.member.add_roles(discord.utils.get(payload.member.guild.roles, name=role))
         else:
@@ -109,11 +109,12 @@ async def on_raw_reaction_add(payload):
 @client.event
 async def on_member_remove(member):
     user = User(member.id, member.name)
-    user.delUser()
+    user.setLeaveTime()
+    print('User: ',user.name,' hat den Server verlassen')
 
 
 
 
 # startet den Client
-client.run('NzcxNDExMjU5OTQwNjY3Mzky.X5ruuA.vNOcIXtNBvL76rhngLvnopOTy6k')#config.botToken)
+client.run(config.botToken)
 # connection.close()
