@@ -28,6 +28,7 @@ async def on_ready():
 
 #Test Ping, Antwort Ping, was ist der Trigger?
 @client.command()
+@commands.has_role("Ping")
 async def ping(ctx):
     await ctx.send(f'Pong --> {round(client.latency * 1000)} ms')
 
@@ -35,6 +36,7 @@ async def ping(ctx):
 
 # erzeugt message für welcome- und registrierungschannel
 @client.command()
+@commands.has_role("Chef")
 async def createmsg(ctx, arg):
 
     await welcomemsg(client, ctx, arg)
