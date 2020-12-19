@@ -40,7 +40,7 @@ CREATE TABLE `config` (
 
 INSERT INTO `config` (`ID`, `feld`, `wert`) VALUES
 (2, 'regChannel', '771398994651381842'),
-(3, 'Token', 'NzcxNDExMjU5OTQwNjY3Mzky.X5ruuA.QoXpwA-sfhMYaoNMOVH-DYFsZ5Q'),
+(3, 'Token', ''),
 (4, 'firstRegMsg', '774465363437944834'),
 (5, 'secondRegMsg', '774465370828046336');
 
