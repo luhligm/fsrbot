@@ -35,8 +35,8 @@ async def welcomemsg(client, ctx, type):
 
 
     #Text für registrierung Channel
-    emojiWinf = client.get_emoji(773074983449788416)  # WInfo
-    emojiWing = client.get_emoji(773074983798571058)  # Wing
+    emojiWing = client.get_emoji(773074983449788416)  # Wing
+    emojiWinf = client.get_emoji(773074983798571058)  # Winf
     emojiWiwi = client.get_emoji(773074983579811850)  # Wiwi
     emojiWipaed = client.get_emoji(773074983412301864)  # Wipad
     emoji2020 = client.get_emoji(774457516108021790)  # 2020
