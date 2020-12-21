@@ -12,7 +12,7 @@ class User:
         # wenn User schon in der DB vorhanden ist
         # todo einzelne Datenbankabfragen zusammenlegen
         if self.userAlreadyExists():
-            print('User existiert schon')
+            print(name,' User existiert schon')
             self.name = self.getName()
             self.role = self.getRole()
             self.jahrgang = self.getJahrgang()
@@ -22,7 +22,7 @@ class User:
 
         # wenn User noch nicht in der Datebank vorhanden ist wird er angelegt
         else:
-            print('User existiert noch nicht')
+            print(name,' User existiert noch nicht')
             self.name = name
             self.joinTime = datetime.datetime.now()
             self.role = role
@@ -76,7 +76,7 @@ class User:
         self.dbConnection.editUser(self.discordID, jahrgang=int(jahrgang))
 
     def getJahrgang(self):
-        return self.dbConnection.getUserEigenschaft(self.discordID,'jahrgang')
+        return str(self.dbConnection.getUserEigenschaft(self.discordID,'jahrgang'))
 
     def addUserToDatabase(self):
         self.dbConnection.addUser(self.discordID, self.name, self.joinTime,self.jahrgang,self.studiengang)
