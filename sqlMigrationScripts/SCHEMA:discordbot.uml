@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>636a7c1c-ba82-4237-ac3b-19920e3471cb.SCHEMA:discordbot</OriginalElement>
+  <nodes>
+    <node x="0.0" y="0.0">636a7c1c-ba82-4237-ac3b-19920e3471cb.TABLE:discordbot.user</node>
+    <node x="231.0" y="0.0">636a7c1c-ba82-4237-ac3b-19920e3471cb.TABLE:discordbot.config</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="185.0" y="104.5" />
+  <SelectedNodes>
+    <node>636a7c1c-ba82-4237-ac3b-19920e3471cb.TABLE:discordbot.user</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+
