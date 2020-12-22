@@ -38,7 +38,7 @@ async def welcomemsg(client, ctx, type):
     emojiWing = client.get_emoji(773074983449788416)  # Wing
     emojiWinf = client.get_emoji(773074983798571058)  # Winf
     emojiWiwi = client.get_emoji(773074983579811850)  # Wiwi
-    emojiWipaed = client.get_emoji(773074983412301864)  # Wipad
+    emojiWipaed = client.get_emoji(773074983412301864)  # Wipaed
     emoji2020 = client.get_emoji(774457516108021790)  # 2020
     emoji2019 = client.get_emoji(774457516028985445)  # 2019
     emoji2018 = client.get_emoji(774457515961614339)  # 2018

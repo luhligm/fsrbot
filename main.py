@@ -77,8 +77,8 @@ async def on_raw_reaction_add(payload):
                     user.setStudiengang('winf')
                 if payload.emoji.name == 'wiwi':
                     user.setStudiengang('wiwi')
-                if payload.emoji.name == 'wipad':
-                    user.setStudiengang('wipäd')
+                if payload.emoji.name == 'wipaed':
+                    user.setStudiengang('wipaed')
                 if payload.emoji.name == 'wing':
                     user.setStudiengang('wing')
 
