@@ -18,6 +18,9 @@ class Config:
         self.regChannel = int(self.dbConnection.getConfig('regChannel'))
         self.firstRegMsg = int(self.dbConnection.getConfig('firstRegMsg'))
         self.secondRegMsg = int(self.dbConnection.getConfig('secondRegMsg'))
+        self.thirdRegMsg = int(self.dbConnection.getConfig('thirdRegMsg'))
+        self.welcomeChannel = int(self.dbConnection.getConfig('welcomeChannel'))
+        self.welcomeMsg = int(self.dbConnection.getConfig('welcomeMsg'))
 
 
 class DBConfig:

@@ -1,10 +1,12 @@
 import discord
+import mariadbConnector
+from config import DBConfig
 
 
-async def welcomemsg(client, ctx, type):
+async def welcomemsg(client, ctx, arg):
 
     #Text für welcome Channel
-    if type == "welcometext":
+    if arg == "welcometext":
         embedWelcome = discord.Embed(
             title="Lies dir bitte vor der weiteren Nutzung diese Anleitung durch, damit du weißt, was zu tun ist und wie die Regeln sind.",
             description="Eine Übersicht, was Discord ist und wie es funktioniert, findest du per Klick auf die Überschrift.",
@@ -31,48 +33,82 @@ async def welcomemsg(client, ctx, type):
                         inline=False)
         embedWelcome.add_field(name="Wir wünschen viel Spaß :blush:",
                         value="Wenn ihr Hilfe braucht, wendet euch an Mods oder schreibt dem FSR", inline=False)
-        await ctx.channel.send(embed=embedWelcome)
+        welcomeMessage = await ctx.channel.send(embed=embedWelcome)
+        print('Welcomemsg wurde erstellt')
+
+        # Datebankeinträge für Welcome Channel und Message
+
+        connection = mariadbConnector.ConnectionToDatabase(DBConfig())
+        connection.setConfig('welcomeMsg',welcomeMessage.id)
+        connection.setConfig('welcomeChannel',ctx.channel.id)
 
 
-    #Text für registrierung Channel
-    emojiWing = client.get_emoji(773074983449788416)  # Wing
-    emojiWinf = client.get_emoji(773074983798571058)  # Winf
-    emojiWiwi = client.get_emoji(773074983579811850)  # Wiwi
-    emojiWipaed = client.get_emoji(773074983412301864)  # Wipaed
-    emoji2020 = client.get_emoji(774457516108021790)  # 2020
-    emoji2019 = client.get_emoji(774457516028985445)  # 2019
-    emoji2018 = client.get_emoji(774457515961614339)  # 2018
+
+
+
    
-    if type == "register":
+    if arg == "register":
+        # Emojis für registrierung Channel
+        emojiWing = client.get_emoji(773074983449788416)  # Wing
+        emojiWinf = client.get_emoji(773074983798571058)  # Winf
+        emojiWiwi = client.get_emoji(773074983579811850)  # Wiwi
+        emojiWipaed = client.get_emoji(773074983412301864)  # Wipaed
+        emoji2020 = client.get_emoji(774457516108021790)  # 2020
+        emoji2019 = client.get_emoji(774457516028985445)  # 2019
+        emoji2018 = client.get_emoji(774457515961614339)  # 2018
+        emojiMaster = client.get_emoji(790986540914311169) # Master
+        emojiGast = client.get_emoji(790987054431469629) # Gast
+
+        #Datenbankeinträge für Registreirungschannel
+        connection = mariadbConnector.ConnectionToDatabase(DBConfig())
+        connection.setConfig('regChannel',ctx.channel.id)
+
         embedUeberschrift = discord.Embed(
-            title="Drücke auf die jeweiligen Emoji's, danach wird dir deine Rolle zugewiesen. Wenn du Hilfe benötigst, benutze den Support-Channel.",
+            title="Drücke auf die jeweiligen Emoji's, danach wird dir deine Rolle zugewiesen. Wenn du Hilfe benötigst, benutze den Support-Channel. Für Gäste gibt es eigene Kategorien",
             color=0x82fe06)
         await ctx.channel.send(embed=embedUeberschrift)
 
         embedStudiangangwahl = discord.Embed(
             title="1. Wähle deinen Studiengang:",
             description="    ", color=0x82fe06)
-        embedStudiangangwahl.add_field(name="Wirtschaftingeneurwesen {}".format(emojiWing), value="------", inline=False)
+        embedStudiangangwahl.add_field(value="------",name="Wirtschaftingeneurwesen {}".format(emojiWing), inline=False)
         embedStudiangangwahl.add_field(name="Wirtschaftinformatik {}".format(emojiWinf), value="------", inline=False)
         embedStudiangangwahl.add_field(name="Wirtschaftspädagogik {}".format(emojiWipaed), value="------", inline=False)
-        embedStudiangangwahl.add_field(name="Wirtschaftswissenschaften {}".format(emojiWiwi), value="------", inline=True)
-        mess = await ctx.channel.send(embed=embedStudiangangwahl)
-        await mess.add_reaction(emojiWing)
-        await mess.add_reaction(emojiWinf)
-        await mess.add_reaction(emojiWipaed)
-        await mess.add_reaction(emojiWiwi)
+        embedStudiangangwahl.add_field(name="Wirtschaftswissenschaften {}".format(emojiWiwi), value="------", inline=False)
+        embedStudiangangwahl.add_field(name="Masterstudiengang {}".format(emojiMaster), value="------", inline=True)
+        msgStudienwahl = await ctx.channel.send(embed=embedStudiangangwahl)
+        await msgStudienwahl.add_reaction(emojiWing)
+        await msgStudienwahl.add_reaction(emojiWinf)
+        await msgStudienwahl.add_reaction(emojiWipaed)
+        await msgStudienwahl.add_reaction(emojiWiwi)
+        await msgStudienwahl.add_reaction(emojiMaster)
 
 
         embedImmaJahr = discord.Embed(
-            title="2 .Wähle das Jahr deiner Immatrikulation:",
+            title="3 .Wähle das Jahr deiner Immatrikulation:",
             color=0x82fe06)
         embedImmaJahr.add_field(name="2020 {}".format(emoji2020), value="------", inline=False)
         embedImmaJahr.add_field(name="2019 {}".format(emoji2019), value="------", inline=False)
-        embedImmaJahr.add_field(name="2018+ {}".format(emoji2018), value="------", inline=False)
-        mess = await ctx.channel.send(embed=embedImmaJahr)
-        await mess.add_reaction(emoji2020)
-        await mess.add_reaction(emoji2019)
-        await mess.add_reaction(emoji2018)
+        embedImmaJahr.add_field(name="≤ 2018 {}".format(emoji2018), value="------", inline=False)
+        msgImmaJahr = await ctx.channel.send(embed=embedImmaJahr)
+        await msgImmaJahr.add_reaction(emoji2020)
+        await msgImmaJahr.add_reaction(emoji2019)
+        await msgImmaJahr.add_reaction(emoji2018)
+
+        embedGast = discord.Embed(
+            title="2 .Weitere Kategorien:",
+            color=0x82fe06)
+        embedGast.add_field(name="Gast {}".format(emojiGast), value="------", inline=False)
+        msgGast = await ctx.channel.send(embed=embedGast)
+        await msgGast.add_reaction(emojiGast)
+
+        # Datenbankeinträge für Registreirungs Channel und Messages
+        connection = mariadbConnector.ConnectionToDatabase(DBConfig())
+        connection.setConfig('regChannel', ctx.channel.id)
+        connection.setConfig('firstRegMsg',msgStudienwahl.id)
+        connection.setConfig('secondRegMsg',msgImmaJahr.id)
+        connection.setConfig('thirdRegMsg',msgGast.id)
+
 
 # was ist damit? wird das überhaupt getriggert?
 async def confirmmsg(ctx, var):
