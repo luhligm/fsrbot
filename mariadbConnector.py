@@ -79,6 +79,12 @@ class ConnectionToDatabase:
         result = self.cursor.fetchall()
         return result[0][0]
 
+    def setConfig(self,feld,wert):
+        sql = "UPDATE config SET wert = '{}' WHERE feld = '{}' ".format(wert,feld)
+
+        self.cursor.execute(sql)
+        self.connection.commit()
+
 def connectToDatabase(dbConfig):
         try:
             connection = mysql.connector.connect(

@@ -30,10 +30,12 @@ def matchJahrgangAndStudiengangToRole(user):
             return 'WWissenschaften2019'
         elif jahrgang == '2018':
             return 'WWissenschaften2018'
-    elif studiengang == 'wipad':
+    elif studiengang == 'wipaed':
         if jahrgang == '2020':
             return 'WPädagoge2020'
         elif jahrgang == '2019':
             return 'WPädagoge2019'
         elif jahrgang == '2018':
             return 'WPädagoge2018'
+    elif studiengang == 'master':
+        return 'Master'

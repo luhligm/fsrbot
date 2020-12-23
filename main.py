@@ -16,7 +16,7 @@ erzeugt Instanz von Client
 Client ist die Verbindung zum Discordserver
 Der Client reagiert auf alle nachrichten mit dem Präfix (!)
 """
-client = commands.Bot(command_prefix="!")
+client = commands.Bot(command_prefix="$")
 config = config.Config()
 
 
@@ -34,7 +34,7 @@ async def ping(ctx):
 
 
 
-# erzeugt message für welcome- und registrierungschannel
+# erzeugt message für welcome- der registrierungschannel
 @client.command()
 @commands.has_role("Chef")
 async def createmsg(ctx, arg):
@@ -77,10 +77,12 @@ async def on_raw_reaction_add(payload):
                     user.setStudiengang('winf')
                 if payload.emoji.name == 'wiwi':
                     user.setStudiengang('wiwi')
-                if payload.emoji.name == 'wipad':
-                    user.setStudiengang('wipäd')
+                if payload.emoji.name == 'wipaed':
+                    user.setStudiengang('wipaed')
                 if payload.emoji.name == 'wing':
                     user.setStudiengang('wing')
+                if payload.emoji.name == 'master':
+                    user.setStudiengang('master')
 
             print(message.id == config.secondRegMsg)
             if message.id == config.secondRegMsg:
@@ -91,6 +93,14 @@ async def on_raw_reaction_add(payload):
                     user.setJahrgang('2019')
                 if payload.emoji.name == 'fsr18':
                     user.setJahrgang('2018')
+
+            # User ist Gast
+            if message.id == config.thirdRegMsg:
+                print('User ist Gast')
+                role = 'Gast'
+                user.setRole(role)
+                await payload.member.add_roles(discord.utils.get(payload.member.guild.roles, name=role))
+
 
 
 
