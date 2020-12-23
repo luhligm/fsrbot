@@ -61,7 +61,7 @@ async def welcomemsg(client, ctx, arg):
         connection.setConfig('regChannel', ctx.channel.id)
 
         embedUeberschrift = discord.Embed(
-            title="Drücke auf die Emoji's unter der jeweiligen Nachricht. Danach wird dir deine Rolle zugewiesen. Wenn du Hilfe benötigst, benutze den Support-Channel. Für Gäste gibt es unten eine eigene Kategorie",
+            title="Drücke auf die Emoji's unter der jeweiligen Nachricht. Danach wird dir deine Rolle zugewiesen. Wenn du Hilfe benötigst, benutze den Support-Channel. Für Gäste gibt es unten eine eigene Kategorie.",
             color=0x82fe06)
         await ctx.channel.send(embed=embedUeberschrift)
 
