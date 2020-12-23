@@ -4,50 +4,46 @@ from config import DBConfig
 
 
 async def welcomemsg(client, ctx, arg):
-
-    #Text für welcome Channel
+    # Text für welcome Channel
     if arg == "welcometext":
         embedWelcome = discord.Embed(
             title="Lies dir bitte vor der weiteren Nutzung diese Anleitung durch, damit du weißt, was zu tun ist und wie die Regeln sind.",
             description="Eine Übersicht, was Discord ist und wie es funktioniert, findest du per Klick auf die Überschrift.",
             color=0x26c606)
         embedWelcome.set_author(name="Willkommen auf dem Discord-Server des FSR WiWi",
-                         url="https://support.discord.com/hc/de/articles/360045138571?utm_source=discord&utm_medium=blog&utm_campaign=2020-06_help-new-user&utm_content=--t%3Apm",
-                         icon_url="https://fsrwiwi.de/wp-content/uploads/2020/10/image940-1024x1014.png")
+                                url="https://support.discord.com/hc/de/articles/360045138571?utm_source=discord&utm_medium=blog&utm_campaign=2020-06_help-new-user&utm_content=--t%3Apm",
+                                icon_url="https://fsrwiwi.de/wp-content/uploads/2020/10/image940-1024x1014.png")
         embedWelcome.add_field(name="1)",
-                        value="Der Discord-Server wurde für die Studierenden der Fakultät Wirtschaftswissenschaften erstellt. Er dient dem Austausch über das Studium, aber auch zur generellen Vernetzung. Lade bitte Freunde von anderen Fakultäten nur für den Vernetzungsteil ein. Diese sollten nach dem Vernetzungsabend am besten auch den Server wieder verlassen. Zugang gibt es für diese im Startchat über die Eingabe „Gast“.",
-                        inline=False)
+                               value="Der Discord-Server wurde für die Studierenden der Fakultät Wirtschaftswissenschaften erstellt. Er dient dem Austausch über das Studium, aber auch zur generellen Vernetzung. Lade bitte Freunde von anderen Fakultäten nur für den Vernetzungsteil ein. Diese sollten nach dem Vernetzungsabend am besten auch den Server wieder verlassen. Zugang gibt es für diese im Startchat über die Eingabe „Gast“.",
+                               inline=False)
         embedWelcome.add_field(name="2)",
-                        value="Zum Austausch über das Studium existiert für (fast) jeden Kurs eine Kategorie. Hier gibt es jeweils einen Sprachkanal, in welchem du mit Kommiliton*innen die Vorlesungen und Übungen diskutieren kannst. Diese stehen dir ohne Terminanmeldung frei zur Verfügung und du kannst natürlich auch aktiven Sessions beitreten. Störe dabei aber bitte nicht die Arbeit. Wenn es Fragen an alle gibt oder Neuigkeiten, die jeder mitbekommen sollte, kannst du diese in den zugehörigen Chat schreiben. Diesen kannst du auch nutzen, um mit anderen Termine zum Üben zu vereinbaren. Für Lösungsvorschläge kann gerne der entsprechende Textkanal genutzt werden. Tipp: Klappe aktuell nicht benötigte Kategorien ein. Dadurch wird es bei dir wesentlich übersichtlicher.",
-                        inline=False)
+                               value="Zum Austausch über das Studium existiert für (fast) jeden Kurs eine Kategorie. Hier gibt es jeweils einen Sprachkanal, in welchem du mit Kommiliton*innen die Vorlesungen und Übungen diskutieren kannst. Diese stehen dir ohne Terminanmeldung frei zur Verfügung und du kannst natürlich auch aktiven Sessions beitreten. Störe dabei aber bitte nicht die Arbeit. Wenn es Fragen an alle gibt oder Neuigkeiten, die jeder mitbekommen sollte, kannst du diese in den zugehörigen Chat schreiben. Diesen kannst du auch nutzen, um mit anderen Termine zum Üben zu vereinbaren. Für Lösungsvorschläge kann gerne der entsprechende Textkanal genutzt werden. Tipp: Klappe aktuell nicht benötigte Kategorien ein. Dadurch wird es bei dir wesentlich übersichtlicher.",
+                               inline=False)
         embedWelcome.add_field(name="3)",
-                        value="Es gibt auch allgemeine Kanäle, welche sich oben in der Liste befinden. Sehr wichtig ist der Feedback-Kanal. Wir wissen, dass zu Beginn noch nicht alles rund laufen wird. Deswegen benötigen wir auf jeden Fall Feedback, was bisher noch nicht so gut läuft, aber auch gerne darüber, was sehr gut läuft. Nur so können wir den Server optimal für euch anpassen.",
-                        inline=False)
+                               value="Es gibt auch allgemeine Kanäle, welche sich oben in der Liste befinden. Sehr wichtig ist der Feedback-Kanal. Wir wissen, dass zu Beginn noch nicht alles rund laufen wird. Deswegen benötigen wir auf jeden Fall Feedback, was bisher noch nicht so gut läuft, aber auch gerne darüber, was sehr gut läuft. Nur so können wir den Server optimal für euch anpassen.",
+                               inline=False)
         embedWelcome.add_field(name="4)",
-                        value="Um dich in diesen Zeiten digital mit anderen vernetzen zu können, haben wir eine entsprechende Kategorie erstellt. Hier kannst du dich zu Spieleabenden oder ähnlichem eintreffen, aber auch wenn du einfach nur mit jemanden reden willst. Für letzteres kannst du dich einfach an einen der virtuellen Bartische setzen und schon geht’s los. Zur Absprache für deine Spieleabende kannst du gerne den zugehörigen Textkanal nutzen. Über diesen werden wir auch eventuelle Events vom FSR kommunizieren.",
-                        inline=False)
+                               value="Um dich in diesen Zeiten digital mit anderen vernetzen zu können, haben wir eine entsprechende Kategorie erstellt. Hier kannst du dich zu Spieleabenden oder ähnlichem eintreffen, aber auch wenn du einfach nur mit jemanden reden willst. Für letzteres kannst du dich einfach an einen der virtuellen Bartische setzen und schon geht’s los. Zur Absprache für deine Spieleabende kannst du gerne den zugehörigen Textkanal nutzen. Über diesen werden wir auch eventuelle Events vom FSR kommunizieren.",
+                               inline=False)
         embedWelcome.add_field(name="5) Regeln:",
-                        value="""1. Respektvoller Umgang miteinander 
+                               value="""1. Respektvoller Umgang miteinander 
                         2. Kein Spam in Kanälen, Privatchats sollten auch privat geführt werden
                         3. Kein unangemessener Inhalt
                         Wir hoffen, dass wir diese Regeln nicht weiter spezifizieren müssen. Wir behalten uns vor Verwarnungen auszusprechen und notfalls Leute vom Server komplett zu entfernen. Über Hinweise sind wir immer dankbar, jedoch checken wir auch so immer die Aktivitäten auf dem Server ab.
-                        So, jetzt genug des lästigen vorgeplänkels, ab in die Registrierung und dann kann es losegehen.""",inline=False)
+                        So, jetzt genug des lästigen vorgeplänkels, ab in die Registrierung und dann kann es losegehen.""",
+                               inline=False)
         embedWelcome.add_field(name="Wir wünschen viel Spaß :blush:",
-                        value="Wenn ihr Hilfe braucht, wendet euch an den Supportkanal oder schreibt dem FSR", inline=False)
+                               value="Wenn ihr Hilfe braucht, wendet euch an den Supportkanal oder schreibt dem FSR",
+                               inline=False)
         welcomeMessage = await ctx.channel.send(embed=embedWelcome)
         print('Welcomemsg wurde erstellt')
 
         # Datebankeinträge für Welcome Channel und Message
 
         connection = mariadbConnector.ConnectionToDatabase(DBConfig())
-        connection.setConfig('welcomeMsg',welcomeMessage.id)
-        connection.setConfig('welcomeChannel',ctx.channel.id)
+        connection.setConfig('welcomeMsg', welcomeMessage.id)
+        connection.setConfig('welcomeChannel', ctx.channel.id)
 
-
-
-
-
-   
     if arg == "register":
         # Emojis für registrierung Channel
         emojiWing = client.get_emoji(773074983449788416)  # Wing
@@ -57,25 +53,27 @@ async def welcomemsg(client, ctx, arg):
         emoji2020 = client.get_emoji(774457516108021790)  # 2020
         emoji2019 = client.get_emoji(774457516028985445)  # 2019
         emoji2018 = client.get_emoji(774457515961614339)  # 2018
-        emojiMaster = client.get_emoji(790986540914311169) # Master
-        emojiGast = client.get_emoji(790987054431469629) # Gast
+        emojiMaster = client.get_emoji(790986540914311169)  # Master
+        emojiGast = client.get_emoji(790987054431469629)  # Gast
 
-        #Datenbankeinträge für Registreirungschannel
+        # Datenbankeinträge für Registreirungschannel
         connection = mariadbConnector.ConnectionToDatabase(DBConfig())
-        connection.setConfig('regChannel',ctx.channel.id)
+        connection.setConfig('regChannel', ctx.channel.id)
 
         embedUeberschrift = discord.Embed(
-            title="Drücke auf die jeweiligen Emoji's, danach wird dir deine Rolle zugewiesen. Wenn du Hilfe benötigst, benutze den Support-Channel. Für Gäste gibt es eigene Kategorien",
+            title="Drücke auf die Emoji's unter der jeweiligen Nachricht. Danach wird dir deine Rolle zugewiesen. Wenn du Hilfe benötigst, benutze den Support-Channel. Für Gäste gibt es unten eine eigene Kategorie.",
             color=0x82fe06)
         await ctx.channel.send(embed=embedUeberschrift)
 
         embedStudiangangwahl = discord.Embed(
             title="1. Wähle deinen Studiengang:",
             description="    ", color=0x82fe06)
-        embedStudiangangwahl.add_field(value="------",name="Wirtschaftingeneurwesen {}".format(emojiWing), inline=False)
+        embedStudiangangwahl.add_field(value="------", name="Wirtschaftingeneurwesen {}".format(emojiWing),
+                                       inline=False)
         embedStudiangangwahl.add_field(name="Wirtschaftinformatik {}".format(emojiWinf), value="------", inline=False)
         embedStudiangangwahl.add_field(name="Wirtschaftspädagogik {}".format(emojiWipaed), value="------", inline=False)
-        embedStudiangangwahl.add_field(name="Wirtschaftswissenschaften {}".format(emojiWiwi), value="------", inline=False)
+        embedStudiangangwahl.add_field(name="Wirtschaftswissenschaften {}".format(emojiWiwi), value="------",
+                                       inline=False)
         embedStudiangangwahl.add_field(name="Masterstudiengang {}".format(emojiMaster), value="------", inline=True)
         msgStudienwahl = await ctx.channel.send(embed=embedStudiangangwahl)
         await msgStudienwahl.add_reaction(emojiWing)
@@ -84,9 +82,8 @@ async def welcomemsg(client, ctx, arg):
         await msgStudienwahl.add_reaction(emojiWiwi)
         await msgStudienwahl.add_reaction(emojiMaster)
 
-
         embedImmaJahr = discord.Embed(
-            title="3 .Wähle das Jahr deiner Immatrikulation:",
+            title="2 .Wähle das Jahr deiner Immatrikulation:",
             color=0x82fe06)
         embedImmaJahr.add_field(name="2020 {}".format(emoji2020), value="------", inline=False)
         embedImmaJahr.add_field(name="2019 {}".format(emoji2019), value="------", inline=False)
@@ -97,7 +94,7 @@ async def welcomemsg(client, ctx, arg):
         await msgImmaJahr.add_reaction(emoji2018)
 
         embedGast = discord.Embed(
-            title="2 .Weitere Kategorien:",
+            title="3 .Weitere Kategorien:",
             color=0x82fe06)
         embedGast.add_field(name="Gast {}".format(emojiGast), value="------", inline=False)
         msgGast = await ctx.channel.send(embed=embedGast)
@@ -106,9 +103,9 @@ async def welcomemsg(client, ctx, arg):
         # Datenbankeinträge für Registreirungs Channel und Messages
         connection = mariadbConnector.ConnectionToDatabase(DBConfig())
         connection.setConfig('regChannel', ctx.channel.id)
-        connection.setConfig('firstRegMsg',msgStudienwahl.id)
-        connection.setConfig('secondRegMsg',msgImmaJahr.id)
-        connection.setConfig('thirdRegMsg',msgGast.id)
+        connection.setConfig('firstRegMsg', msgStudienwahl.id)
+        connection.setConfig('secondRegMsg', msgImmaJahr.id)
+        connection.setConfig('thirdRegMsg', msgGast.id)
 
 
 # was ist damit? wird das überhaupt getriggert?
