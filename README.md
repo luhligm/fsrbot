@@ -1,2 +1,0 @@
-# fsrbot
-Bot for Discord
