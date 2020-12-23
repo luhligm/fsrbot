@@ -15,13 +15,13 @@ async def welcomemsg(client, ctx, arg):
                          url="https://support.discord.com/hc/de/articles/360045138571?utm_source=discord&utm_medium=blog&utm_campaign=2020-06_help-new-user&utm_content=--t%3Apm",
                          icon_url="https://fsrwiwi.de/wp-content/uploads/2020/10/image940-1024x1014.png")
         embedWelcome.add_field(name="1)",
-                        value=" Der Discord-Server wurde für den Immatrikulationsjahrgang 2020 der Fakultät Wirtschaftswissenschaften erstellt. Er dient dem Austausch über das Studium, aber auch zur generellen Vernetzung. Lade bitte Freunde von anderen Fakultäten nur für den Vernetzungsteil ein. Diese sollten nach dem Vernetzungsabend am besten auch den Server wieder verlassen. Zugang gibt es für diese im Startchat über die Eingabe „Gast“.",
+                        value="Der Discord-Server wurde für die Studierenden der Fakultät Wirtschaftswissenschaften erstellt. Er dient dem Austausch über das Studium, aber auch zur generellen Vernetzung. Lade bitte Freunde von anderen Fakultäten nur für den Vernetzungsteil ein. Diese sollten nach dem Vernetzungsabend am besten auch den Server wieder verlassen. Zugang gibt es für diese im Startchat über die Eingabe „Gast“.",
                         inline=False)
         embedWelcome.add_field(name="2)",
-                        value="Zum Austausch über das Studium existiert für (fast) jeden Kurs eine Kategorie. Hier gibt es jeweils einen Sprachkanal, in welchem du mit Kommiliton*innen die Vorlesungen und Übungen diskutieren kannst. Diese stehen dir ohne Anmeldung frei zur Verfügung und du kannst natürlich auch aktiven Sessions beitreten. Störe dabei aber bitte nicht die Arbeit. Wenn es Fragen an alle gibt oder Neuigkeiten, die jeder mitbekommen sollte, kannst du diese in den zugehörigen Chat schreiben. Diesen kannst du auch nutzen, um mit anderen Termine zum Üben zu vereinbaren. Für Lösungsvorschläge kann gerne der entsprechende Textkanal genutzt werden. Tipp: Klappe aktuell nicht benötigte Kategorien ein. Dadurch wird es bei dir wesentlich übersichtlicher",
+                        value="Zum Austausch über das Studium existiert für (fast) jeden Kurs eine Kategorie. Hier gibt es jeweils einen Sprachkanal, in welchem du mit Kommiliton*innen die Vorlesungen und Übungen diskutieren kannst. Diese stehen dir ohne Terminanmeldung frei zur Verfügung und du kannst natürlich auch aktiven Sessions beitreten. Störe dabei aber bitte nicht die Arbeit. Wenn es Fragen an alle gibt oder Neuigkeiten, die jeder mitbekommen sollte, kannst du diese in den zugehörigen Chat schreiben. Diesen kannst du auch nutzen, um mit anderen Termine zum Üben zu vereinbaren. Für Lösungsvorschläge kann gerne der entsprechende Textkanal genutzt werden. Tipp: Klappe aktuell nicht benötigte Kategorien ein. Dadurch wird es bei dir wesentlich übersichtlicher.",
                         inline=False)
         embedWelcome.add_field(name="3)",
-                        value="Es gibt auch allgemeine Kanäle, welche sich oben in der Liste befinden. Sehr wichtig ist der Feedback-Kanal. Wir wissen, dass zu Beginn noch nicht alles rund laufen wird. Deswegen benötigen wir auf jeden Fall Feedback, was bisher noch nicht so gut läuft, aber auch gerne darüber, was sehr gut läuft. Nur so können wir den Server optimal für euch anpassen. Weiterhin wird es wöchentliche Sprechstunden mit dem FSR geben, in welchem du Fragen zum Studium stellen kannst. Der zugehörige Kanal befindet sich in der Kategorie FSR-Kontakt",
+                        value="Es gibt auch allgemeine Kanäle, welche sich oben in der Liste befinden. Sehr wichtig ist der Feedback-Kanal. Wir wissen, dass zu Beginn noch nicht alles rund laufen wird. Deswegen benötigen wir auf jeden Fall Feedback, was bisher noch nicht so gut läuft, aber auch gerne darüber, was sehr gut läuft. Nur so können wir den Server optimal für euch anpassen.",
                         inline=False)
         embedWelcome.add_field(name="4)",
                         value="Um dich in diesen Zeiten digital mit anderen vernetzen zu können, haben wir eine entsprechende Kategorie erstellt. Hier kannst du dich zu Spieleabenden oder ähnlichem eintreffen, aber auch wenn du einfach nur mit jemanden reden willst. Für letzteres kannst du dich einfach an einen der virtuellen Bartische setzen und schon geht’s los. Zur Absprache für deine Spieleabende kannst du gerne den zugehörigen Textkanal nutzen. Über diesen werden wir auch eventuelle Events vom FSR kommunizieren.",
@@ -29,10 +29,11 @@ async def welcomemsg(client, ctx, arg):
         embedWelcome.add_field(name="5) Regeln:",
                         value="""1. Respektvoller Umgang miteinander 
                         2. Kein Spam in Kanälen, Privatchats sollten auch privat geführt werden
-                        3. Kein unangemessener Inhalt""",
-                        inline=False)
+                        3. Kein unangemessener Inhalt
+                        Wir hoffen, dass wir diese Regeln nicht weiter spezifizieren müssen. Wir behalten uns vor Verwarnungen auszusprechen und notfalls Leute vom Server komplett zu entfernen. Über Hinweise sind wir immer dankbar, jedoch checken wir auch so immer die Aktivitäten auf dem Server ab.
+                        So, jetzt genug des lästigen vorgeplänkels, ab in die Registrierung und dann kann es losegehen.""",inline=False)
         embedWelcome.add_field(name="Wir wünschen viel Spaß :blush:",
-                        value="Wenn ihr Hilfe braucht, wendet euch an Mods oder schreibt dem FSR", inline=False)
+                        value="Wenn ihr Hilfe braucht, wendet euch an den Supportkanal oder schreibt dem FSR", inline=False)
         welcomeMessage = await ctx.channel.send(embed=embedWelcome)
         print('Welcomemsg wurde erstellt')
 
