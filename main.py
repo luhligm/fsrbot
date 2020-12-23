@@ -16,7 +16,7 @@ erzeugt Instanz von Client
 Client ist die Verbindung zum Discordserver
 Der Client reagiert auf alle nachrichten mit dem Präfix (!)
 """
-client = commands.Bot(command_prefix="!")
+client = commands.Bot(command_prefix="!!")
 config = config.Config()
 
 
@@ -59,6 +59,7 @@ async def on_raw_reaction_add(payload):
 
     # keine Reaktion, fall der Bot der Auslöser war
     if payload.member.bot:
+        print("DU BOT")
         return
     print('kein Bot')
     # reagiert nur auf Emoji im registrierung Channel
@@ -109,10 +110,12 @@ async def on_raw_reaction_add(payload):
     await message.remove_reaction(payload.emoji, payload.member)
 
 @client.event
-async def on_member_remove(member):
+async def guildMemberRemove(member):
+    user = User(member.id, member.name)
+    print('User: ', user.name,' hat den Server verlassen')
     user = User(member.id, member.name)
     user.setLeaveTime()
-    print('User: ',user.name,' hat den Server verlassen')
+
 
 
 
