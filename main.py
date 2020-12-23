@@ -1,132 +1,115 @@
-# Einstiegspunkt des Pythonsscript
-
-import asyncio
 import discord
-from datetime import *
-from discord.ext import commands
-from mariadbConnector import *
-from fuctions import matchJahrgangAndStudiengangToRole
-from msgcontent import welcomemsg, confirmmsg
-from user import User
-import config
+import mariadbConnector
+from config import DBConfig
 
 
-"""
-erzeugt Instanz von Client
-Client ist die Verbindung zum Discordserver
-Der Client reagiert auf alle nachrichten mit dem Präfix (!)
-"""
-client = commands.Bot(command_prefix="$")
-config = config.Config()
+async def welcomemsg(client, ctx, arg):
+    # Text für welcome Channel
+    if arg == "welcometext":
+        embedWelcome = discord.Embed(
+            title="Lies dir bitte vor der weiteren Nutzung diese Anleitung durch, damit du weißt, was zu tun ist und wie die Regeln sind.",
+            description="Eine Übersicht, was Discord ist und wie es funktioniert, findest du per Klick auf die Überschrift.",
+            color=0x26c606)
+        embedWelcome.set_author(name="Willkommen auf dem Discord-Server des FSR WiWi",
+                                url="https://support.discord.com/hc/de/articles/360045138571?utm_source=discord&utm_medium=blog&utm_campaign=2020-06_help-new-user&utm_content=--t%3Apm",
+                                icon_url="https://fsrwiwi.de/wp-content/uploads/2020/10/image940-1024x1014.png")
+        embedWelcome.add_field(name="1)",
+                               value="Der Discord-Server wurde für die Studierenden der Fakultät Wirtschaftswissenschaften erstellt. Er dient dem Austausch über das Studium, aber auch zur generellen Vernetzung. Lade bitte Freunde von anderen Fakultäten nur für den Vernetzungsteil ein. Diese sollten nach dem Vernetzungsabend am besten auch den Server wieder verlassen. Zugang gibt es für diese im Startchat über die Eingabe „Gast“.",
+                               inline=False)
+        embedWelcome.add_field(name="2)",
+                               value="Zum Austausch über das Studium existiert für (fast) jeden Kurs eine Kategorie. Hier gibt es jeweils einen Sprachkanal, in welchem du mit Kommiliton*innen die Vorlesungen und Übungen diskutieren kannst. Diese stehen dir ohne Terminanmeldung frei zur Verfügung und du kannst natürlich auch aktiven Sessions beitreten. Störe dabei aber bitte nicht die Arbeit. Wenn es Fragen an alle gibt oder Neuigkeiten, die jeder mitbekommen sollte, kannst du diese in den zugehörigen Chat schreiben. Diesen kannst du auch nutzen, um mit anderen Termine zum Üben zu vereinbaren. Für Lösungsvorschläge kann gerne der entsprechende Textkanal genutzt werden. Tipp: Klappe aktuell nicht benötigte Kategorien ein. Dadurch wird es bei dir wesentlich übersichtlicher.",
+                               inline=False)
+        embedWelcome.add_field(name="3)",
+                               value="Es gibt auch allgemeine Kanäle, welche sich oben in der Liste befinden. Sehr wichtig ist der Feedback-Kanal. Wir wissen, dass zu Beginn noch nicht alles rund laufen wird. Deswegen benötigen wir auf jeden Fall Feedback, was bisher noch nicht so gut läuft, aber auch gerne darüber, was sehr gut läuft. Nur so können wir den Server optimal für euch anpassen.",
+                               inline=False)
+        embedWelcome.add_field(name="4)",
+                               value="Um dich in diesen Zeiten digital mit anderen vernetzen zu können, haben wir eine entsprechende Kategorie erstellt. Hier kannst du dich zu Spieleabenden oder ähnlichem eintreffen, aber auch wenn du einfach nur mit jemanden reden willst. Für letzteres kannst du dich einfach an einen der virtuellen Bartische setzen und schon geht’s los. Zur Absprache für deine Spieleabende kannst du gerne den zugehörigen Textkanal nutzen. Über diesen werden wir auch eventuelle Events vom FSR kommunizieren.",
+                               inline=False)
+        embedWelcome.add_field(name="5) Regeln:",
+                               value="""1. Respektvoller Umgang miteinander 
+                        2. Kein Spam in Kanälen, Privatchats sollten auch privat geführt werden
+                        3. Kein unangemessener Inhalt
+                        Wir hoffen, dass wir diese Regeln nicht weiter spezifizieren müssen. Wir behalten uns vor Verwarnungen auszusprechen und notfalls Leute vom Server komplett zu entfernen. Über Hinweise sind wir immer dankbar, jedoch checken wir auch so immer die Aktivitäten auf dem Server ab.
+                        So, jetzt genug des lästigen vorgeplänkels, ab in die Registrierung und dann kann es losegehen.""",
+                               inline=False)
+        embedWelcome.add_field(name="Wir wünschen viel Spaß :blush:",
+                               value="Wenn ihr Hilfe braucht, wendet euch an den Supportkanal oder schreibt dem FSR",
+                               inline=False)
+        welcomeMessage = await ctx.channel.send(embed=embedWelcome)
+        print('Welcomemsg wurde erstellt')
+
+        # Datebankeinträge für Welcome Channel und Message
+
+        connection = mariadbConnector.ConnectionToDatabase(DBConfig())
+        connection.setConfig('welcomeMsg', welcomeMessage.id)
+        connection.setConfig('welcomeChannel', ctx.channel.id)
+
+    if arg == "register":
+        # Emojis für registrierung Channel
+        emojiWing = client.get_emoji(773074983449788416)  # Wing
+        emojiWinf = client.get_emoji(773074983798571058)  # Winf
+        emojiWiwi = client.get_emoji(773074983579811850)  # Wiwi
+        emojiWipaed = client.get_emoji(773074983412301864)  # Wipaed
+        emoji2020 = client.get_emoji(774457516108021790)  # 2020
+        emoji2019 = client.get_emoji(774457516028985445)  # 2019
+        emoji2018 = client.get_emoji(774457515961614339)  # 2018
+        emojiMaster = client.get_emoji(790986540914311169)  # Master
+        emojiGast = client.get_emoji(790987054431469629)  # Gast
+
+        # Datenbankeinträge für Registreirungschannel
+        connection = mariadbConnector.ConnectionToDatabase(DBConfig())
+        connection.setConfig('regChannel', ctx.channel.id)
+
+        embedUeberschrift = discord.Embed(
+            title="Drücke auf die Emoji's unter der jeweiligen Nachricht. Danach wird dir deine Rolle zugewiesen. Wenn du Hilfe benötigst, benutze den Support-Channel. Für Gäste gibt es unten eine eigene Kategorie",
+            color=0x82fe06)
+        await ctx.channel.send(embed=embedUeberschrift)
+
+        embedStudiangangwahl = discord.Embed(
+            title="1. Wähle deinen Studiengang:",
+            description="    ", color=0x82fe06)
+        embedStudiangangwahl.add_field(value="------", name="Wirtschaftingeneurwesen {}".format(emojiWing),
+                                       inline=False)
+        embedStudiangangwahl.add_field(name="Wirtschaftinformatik {}".format(emojiWinf), value="------", inline=False)
+        embedStudiangangwahl.add_field(name="Wirtschaftspädagogik {}".format(emojiWipaed), value="------", inline=False)
+        embedStudiangangwahl.add_field(name="Wirtschaftswissenschaften {}".format(emojiWiwi), value="------",
+                                       inline=False)
+        embedStudiangangwahl.add_field(name="Masterstudiengang {}".format(emojiMaster), value="------", inline=True)
+        msgStudienwahl = await ctx.channel.send(embed=embedStudiangangwahl)
+        await msgStudienwahl.add_reaction(emojiWing)
+        await msgStudienwahl.add_reaction(emojiWinf)
+        await msgStudienwahl.add_reaction(emojiWipaed)
+        await msgStudienwahl.add_reaction(emojiWiwi)
+        await msgStudienwahl.add_reaction(emojiMaster)
+
+        embedImmaJahr = discord.Embed(
+            title="2 .Wähle das Jahr deiner Immatrikulation:",
+            color=0x82fe06)
+        embedImmaJahr.add_field(name="2020 {}".format(emoji2020), value="------", inline=False)
+        embedImmaJahr.add_field(name="2019 {}".format(emoji2019), value="------", inline=False)
+        embedImmaJahr.add_field(name="≤ 2018 {}".format(emoji2018), value="------", inline=False)
+        msgImmaJahr = await ctx.channel.send(embed=embedImmaJahr)
+        await msgImmaJahr.add_reaction(emoji2020)
+        await msgImmaJahr.add_reaction(emoji2019)
+        await msgImmaJahr.add_reaction(emoji2018)
+
+        embedGast = discord.Embed(
+            title="3 .Weitere Kategorien:",
+            color=0x82fe06)
+        embedGast.add_field(name="Gast {}".format(emojiGast), value="------", inline=False)
+        msgGast = await ctx.channel.send(embed=embedGast)
+        await msgGast.add_reaction(emojiGast)
+
+        # Datenbankeinträge für Registreirungs Channel und Messages
+        connection = mariadbConnector.ConnectionToDatabase(DBConfig())
+        connection.setConfig('regChannel', ctx.channel.id)
+        connection.setConfig('firstRegMsg', msgStudienwahl.id)
+        connection.setConfig('secondRegMsg', msgImmaJahr.id)
+        connection.setConfig('thirdRegMsg', msgGast.id)
 
 
-#Ausgabe ob Bot erfolgreich gestartet und Client Latency in Terminal nach Start des Scripts
-@client.event
-async def on_ready():
-    print('[FSRBot] Script erfolgreich geladen und der Client hat eine Verbindung zum Server aufgebaut')
-    print(f'[FSRBot] Bot online ({round(client.latency * 1000)} ms)')
-
-#Test Ping, Antwort Ping, was ist der Trigger?
-@client.command()
-@commands.has_role("Ping")
-async def ping(ctx):
-    await ctx.send(f'Pong --> {round(client.latency * 1000)} ms')
-
-
-
-# erzeugt message für welcome- der registrierungschannel
-@client.command()
-@commands.has_role("Chef")
-async def createmsg(ctx, arg):
-
-    await welcomemsg(client, ctx, arg)
-
-
-# Löscht Nachricht
-@client.listen('on_message')
-async def autodelete(message):
-    if message.channel.id == config.regChannel and not message.author.bot:
-        await asyncio.sleep(1)
-        await message.delete()
-
-
-
-# Event, dass auf Auswahl der Emoji reagiert (payload = message data)
-@client.event
-async def on_raw_reaction_add(payload):
-    channel = client.get_channel(payload.channel_id)
-    message = await channel.fetch_message(payload.message_id)
-
-    # keine Reaktion, fall der Bot der Auslöser war
-    if payload.member.bot:
-        return
-    print('kein Bot')
-    # reagiert nur auf Emoji im registrierung Channel
-    if channel.id == config.regChannel:
-        print('im Reg Channel')
-        #User wird in der Datenbank angelegt oder seine Eingeschaften werden aus der Datenbank geleden
-        user = User(payload.member.id, payload.member.name)
-
-        # User ist schon in der Datenbank, hat aber noch keine Rolle
-        if user.role == None:
-            print('user hat noch keine Rolle')
-
-            if message.id == config.firstRegMsg:
-                print('setstudiengang: ',payload.emoji.name)
-                if payload.emoji.name == 'winf':
-                    user.setStudiengang('winf')
-                if payload.emoji.name == 'wiwi':
-                    user.setStudiengang('wiwi')
-                if payload.emoji.name == 'wipaed':
-                    user.setStudiengang('wipaed')
-                if payload.emoji.name == 'wing':
-                    user.setStudiengang('wing')
-                if payload.emoji.name == 'master':
-                    user.setStudiengang('master')
-
-            print(message.id == config.secondRegMsg)
-            if message.id == config.secondRegMsg:
-                print('setjahrgang: ',payload.emoji.name)
-                if payload.emoji.name == 'fsr20':
-                    user.setJahrgang('2020')
-                if payload.emoji.name == 'fsr19':
-                    user.setJahrgang('2019')
-                if payload.emoji.name == 'fsr18':
-                    user.setJahrgang('2018')
-
-            # User ist Gast
-            if message.id == config.thirdRegMsg:
-                print('User ist Gast')
-                role = 'Gast'
-                user.setRole(role)
-                await payload.member.add_roles(discord.utils.get(payload.member.guild.roles, name=role))
-
-
-
-
-        # user hat beide emoji ausgewählt (hat Studiengang und Jahrgang) -> bekommt Rolle
-        if user.jahrgang and user.studiengang:
-            print('beides wurde gewählt')
-            print(user.studiengang,user.jahrgang)
-            role = matchJahrgangAndStudiengangToRole(user)
-            print('role: ',role,type(role))
-            user.setRole(role)
-            await payload.member.add_roles(discord.utils.get(payload.member.guild.roles, name=role))
-        else:
-            print('noch nicht beides ausgewählt')
-
-    # entfernt Reaktion auf den Emoji
-    await message.remove_reaction(payload.emoji, payload.member)
-
-@client.event
-async def on_member_remove(member):
-    user = User(member.id, member.name)
-    user.setLeaveTime()
-    print('User: ',user.name,' hat den Server verlassen')
-
-
-
-
-# startet den Client
-client.run(config.botToken)
-# connection.close()
+# was ist damit? wird das überhaupt getriggert?
+async def confirmmsg(ctx, var):
+    await ctx.author.send(
+        "Du hast dich erfolgreich für {} registriert! Wenn du sonstige Hilfe benötigst, wende dich bitte an einen Moderator.".format(
+            var))
